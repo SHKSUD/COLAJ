@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Colonel Ajay K Raina, SM (Retd)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Oswald:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--olive:#3d4a2e;--olive-dark:#252e1a;--gold:#c9a84c;--gold-light:#e8c97a;--cream:#f4efe3;--ink:#1a1a16;--ash:#8a8068;--khaki:#b5a07a;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Cormorant Garamond',serif;background:var(--ink);color:var(--cream);overflow-x:hidden;}
+#radar-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.03;}
+nav{position:fixed;top:0;left:0;width:100%;z-index:100;background:rgba(26,26,22,0.94);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.2);display:flex;align-items:center;justify-content:space-between;padding:0 4rem;height:64px;}
+.nav-brand{font-family:'Oswald',sans-serif;font-size:0.82rem;letter-spacing:0.25em;color:var(--gold);text-transform:uppercase;}
+.nav-links{display:flex;gap:2.5rem;list-style:none;}
+.nav-links a{font-family:'Oswald',sans-serif;font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--khaki);text-decoration:none;transition:color 0.3s;}
+.nav-links a:hover{color:var(--gold);}
+.nav-social{display:flex;gap:1rem;align-items:center;}
+.nav-social a{color:var(--khaki);text-decoration:none;transition:color 0.3s;display:flex;align-items:center;}
+.nav-social a:hover{color:var(--gold);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;}
+.hamburger span{width:24px;height:2px;background:var(--gold);display:block;}
+#hero{min-height:100vh;background:var(--olive-dark);position:relative;display:flex;align-items:center;overflow:hidden;}
+.hero-grid{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 49px,rgba(201,168,76,0.04) 50px),repeating-linear-gradient(90deg,transparent,transparent 49px,rgba(201,168,76,0.04) 50px);pointer-events:none;}
+.hero-left{flex:1;display:flex;flex-direction:column;justify-content:center;padding:9rem 8rem 7rem 8rem;position:relative;z-index:2;max-width:860px;}
+.hero-tag{font-family:'Oswald',sans-serif;font-size:0.68rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;display:flex;align-items:center;gap:0.8rem;}
+.hero-tag::before{content:'';display:block;width:2.5rem;height:1px;background:var(--gold);}
+.hero-name{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,5vw,5.5rem);font-weight:900;line-height:1.0;color:var(--cream);}
+.hero-name span{color:var(--gold);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-size:clamp(1rem,1.8vw,1.45rem);font-style:italic;color:var(--khaki);margin:1.2rem 0 0.5rem;}
+.hero-div{width:4rem;height:2px;background:linear-gradient(90deg,var(--gold),transparent);margin:1.5rem 0;}
+.hero-intro{font-size:1.12rem;line-height:1.85;color:#c8bfa5;max-width:520px;font-weight:300;}
+.hero-intro strong{color:var(--gold-light);font-weight:400;}
+.hero-cta{display:flex;gap:1rem;margin-top:2.5rem;flex-wrap:wrap;}
+.hero-stats{display:flex;gap:2.5rem;margin-top:2.5rem;padding-top:2rem;border-top:1px solid rgba(201,168,76,0.15);}
+.stat-num{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:var(--gold);line-height:1;}
+.stat-label{font-family:'Oswald',sans-serif;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);margin-top:0.2rem;}
+.btn{font-family:'Oswald',sans-serif;font-size:0.73rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.85rem 2rem;cursor:pointer;text-decoration:none;display:inline-block;transition:all 0.3s;}
+.btn-primary{background:var(--gold);color:var(--olive-dark);border:2px solid var(--gold);}
+.btn-primary:hover{background:var(--gold-light);}
+.btn-outline{background:transparent;color:var(--gold);border:2px solid rgba(201,168,76,0.5);}
+.btn-outline:hover{border-color:var(--gold);background:rgba(201,168,76,0.08);}
+.hero-right{width:42%;position:relative;display:flex;align-items:flex-end;overflow:hidden;}
+.hero-photo-wrap{width:100%;height:100%;position:relative;background:#1a2012;}
+.hero-photo-wrap::before{content:'';position:absolute;inset:0;background:linear-gradient(to right,var(--olive-dark) 0%,transparent 35%);z-index:2;}
+.hero-photo-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(to top,var(--olive-dark),transparent);z-index:2;}
+.hero-photo{width:100%;height:100%;object-fit:cover;object-position:center top;filter:sepia(20%) contrast(1.1);opacity:0.88;}
+.hero-badge{position:absolute;bottom:3rem;right:2rem;z-index:5;display:flex;flex-direction:column;gap:0.5rem;text-align:right;}
+.badge-pill{font-family:'Oswald',sans-serif;font-size:0.63rem;letter-spacing:0.2em;text-transform:uppercase;background:rgba(26,26,22,0.88);border:1px solid rgba(201,168,76,0.45);color:var(--gold);padding:0.4rem 0.9rem;display:inline-block;}
+.trust-bar{position:absolute;bottom:0;left:0;right:0;background:rgba(37,46,26,0.85);backdrop-filter:blur(8px);border-top:1px solid rgba(201,168,76,0.2);z-index:10;padding:0.85rem 8rem;display:flex;gap:3rem;align-items:center;overflow-x:auto;}
+.trust-item{font-family:'Oswald',sans-serif;font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--khaki);white-space:nowrap;display:flex;align-items:center;gap:0.5rem;}
+.trust-item::before{content:'✦';color:var(--gold);font-size:0.5rem;}
+section{padding:7rem 8rem;position:relative;z-index:1;}
+.section-label{font-family:'Oswald',sans-serif;font-size:0.63rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;display:flex;align-items:center;gap:0.8rem;}
+.section-label::before{content:'';display:block;width:2rem;height:1px;background:var(--gold);}
+h2{font-family:'Playfair Display',serif;font-size:clamp(2rem,3.5vw,3.2rem);font-weight:700;line-height:1.15;color:var(--cream);margin-bottom:1.5rem;}
+h2 em{color:var(--gold);font-style:italic;}
+.body-text{font-size:1.08rem;line-height:1.85;color:#c0b79a;font-weight:300;}
+
+/* MILITARY HISTORY */
+#military-history{background:linear-gradient(135deg,#0e1409,#1a2012,#0e1409);border-top:1px solid rgba(201,168,76,0.15);border-bottom:1px solid rgba(201,168,76,0.15);}
+.mh-inner{display:grid;grid-template-columns:1fr 1.4fr;gap:5rem;align-items:start;}
+.mh-day{font-family:'Playfair Display',serif;font-size:5rem;font-weight:900;color:var(--gold);line-height:1;}
+.mh-month-year{font-family:'Oswald',sans-serif;font-size:1rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--ash);}
+.mh-tagline{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-style:italic;color:var(--khaki);line-height:1.7;margin-top:1.5rem;}
+.mh-card{background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.2);padding:2.5rem;position:relative;min-height:320px;}
+.mh-card::before{content:'CLASSIFIED';position:absolute;top:1rem;right:1.2rem;font-family:'Oswald',sans-serif;font-size:0.55rem;letter-spacing:0.3em;color:rgba(201,168,76,0.2);border:1px solid rgba(201,168,76,0.15);padding:0.2rem 0.6rem;}
+.mh-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;gap:1rem;}
+.mh-spinner{width:40px;height:40px;border:2px solid rgba(201,168,76,0.15);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.mh-spinner-text{font-family:'Oswald',sans-serif;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);}
+.mh-event-year{font-family:'Oswald',sans-serif;font-size:0.75rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem;display:block;}
+.mh-event-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--cream);margin-bottom:1rem;line-height:1.3;}
+.mh-event-body{font-size:1rem;line-height:1.8;color:#b8ae92;font-weight:300;}
+.mh-significance{margin-top:1.5rem;padding:1rem 1.2rem;border-left:2px solid var(--gold);background:rgba(201,168,76,0.05);}
+.mh-sig-label{font-family:'Oswald',sans-serif;font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;}
+.mh-sig-text{font-size:0.9rem;color:var(--khaki);line-height:1.6;font-style:italic;}
+.mh-refresh{display:inline-flex;align-items:center;gap:0.6rem;margin-top:1.5rem;background:none;border:1px solid rgba(201,168,76,0.3);color:var(--gold);font-family:'Oswald',sans-serif;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.6rem 1.2rem;cursor:pointer;transition:all 0.3s;}
+.mh-refresh:hover{border-color:var(--gold);background:rgba(201,168,76,0.08);}
+.mh-refresh svg{transition:transform 0.5s;}
+.mh-refresh:hover svg{transform:rotate(180deg);}
+
+/* YOUTUBE */
+#youtube{background:var(--ink);}
+.yt-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:3rem;flex-wrap:wrap;gap:1rem;}
+.yt-channel-icon{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--olive));display:flex;align-items:center;justify-content:center;}
+.yt-channel-info{display:flex;align-items:center;gap:1.2rem;margin-top:1rem;}
+.yt-channel-name{font-family:'Oswald',sans-serif;font-size:1rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream);}
+.yt-channel-handle{font-size:0.85rem;color:var(--ash);}
+.yt-sub-badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,0,0,0.12);border:1px solid rgba(255,80,80,0.3);color:#ff8080;font-family:'Oswald',sans-serif;font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.3rem 0.8rem;margin-top:0.4rem;}
+.yt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.8rem;}
+.yt-card{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.1);overflow:hidden;transition:all 0.35s;text-decoration:none;display:block;}
+.yt-card:hover{border-color:rgba(201,168,76,0.4);transform:translateY(-4px);}
+.yt-thumb{width:100%;aspect-ratio:16/9;position:relative;overflow:hidden;background:#0a0a08;}
+.yt-thumb-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.3s;}
+.yt-card:hover .yt-thumb-overlay{opacity:1;}
+.yt-play{width:52px;height:52px;border-radius:50%;background:rgba(201,168,76,0.9);display:flex;align-items:center;justify-content:center;}
+.yt-play svg{margin-left:4px;}
+.yt-duration{position:absolute;bottom:0.5rem;right:0.5rem;background:rgba(0,0,0,0.82);color:#fff;font-family:'Oswald',sans-serif;font-size:0.7rem;padding:0.15rem 0.4rem;}
+.yt-info{padding:1.2rem;}
+.yt-video-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--cream);line-height:1.4;margin-bottom:0.6rem;}
+.yt-meta{font-family:'Oswald',sans-serif;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ash);display:flex;gap:1rem;}
+.yt-tag{display:inline-block;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.15);color:var(--gold);font-family:'Oswald',sans-serif;font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.2rem 0.5rem;margin-top:0.5rem;}
+.yt-skel{background:rgba(255,255,255,0.03);border:1px solid rgba(201,168,76,0.08);}
+.yt-skel-thumb{width:100%;aspect-ratio:16/9;background:linear-gradient(90deg,rgba(255,255,255,0.03) 25%,rgba(201,168,76,0.06) 50%,rgba(255,255,255,0.03) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;}
+.yt-skel-line{height:12px;background:linear-gradient(90deg,rgba(255,255,255,0.03) 25%,rgba(201,168,76,0.06) 50%,rgba(255,255,255,0.03) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;margin:1rem 1.2rem 0.5rem;}
+.yt-skel-line.short{width:60%;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.yt-notice{background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);padding:1.2rem 2rem;font-size:0.88rem;color:var(--ash);text-align:center;margin-top:2rem;line-height:1.6;}
+.yt-notice a{color:var(--gold);text-decoration:none;}
+.yt-thumb-card{display:block;text-decoration:none;border:1px solid rgba(201,168,76,0.15);overflow:hidden;transition:border-color 0.3s,transform 0.3s;background:#0a0a08;}
+.yt-thumb-card:hover{border-color:rgba(201,168,76,0.5);transform:translateY(-5px);}
+.yt-thumb-img-wrap{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#111;}
+.yt-thumb-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s;}
+.yt-thumb-card:hover .yt-thumb-img-wrap img{transform:scale(1.04);}
+.yt-thumb-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.3s;}
+.yt-thumb-card:hover .yt-thumb-overlay{opacity:1;}
+.yt-play-btn{width:60px;height:60px;border-radius:50%;background:rgba(201,168,76,0.92);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.5);}
+.yt-play-btn svg{margin-left:5px;}
+.yt-thumb-footer{padding:0.9rem 1.1rem;display:flex;align-items:center;justify-content:space-between;}
+.yt-thumb-channel{font-family:'Oswald',sans-serif;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--ash);display:flex;align-items:center;gap:0.4rem;}
+.yt-thumb-cta{font-family:'Oswald',sans-serif;font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);}
+.yt-cta-row{display:flex;align-items:center;justify-content:center;gap:1.5rem;margin-top:3rem;flex-wrap:wrap;}
+
+/* BOOKSHELF */
+#books{background:var(--olive-dark);}
+.bookshelf-wrap{margin-top:3.5rem;position:relative;}
+.shelf{display:flex;align-items:flex-end;gap:0;padding:2rem 2rem 0;background:linear-gradient(180deg,rgba(20,26,14,0),rgba(20,26,14,0.4));position:relative;overflow-x:auto;overflow-y:visible;min-height:270px;padding-bottom:18px;}
+.shelf-ledge{height:18px;background:linear-gradient(180deg,#3a2a10,#1a1208);border-top:3px solid #6b4c22;box-shadow:0 8px 28px rgba(0,0,0,0.7);position:relative;}
+.shelf-ledge::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:rgba(255,255,255,0.06);}
+.book-spine{position:relative;height:210px;min-width:44px;cursor:pointer;transform-origin:bottom center;transition:transform 0.38s cubic-bezier(0.34,1.56,0.64,1),filter 0.3s,box-shadow 0.3s;filter:brightness(0.78);display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:2px 3px 0 0;box-shadow:inset -4px 0 8px rgba(0,0,0,0.4),inset 2px 0 4px rgba(255,255,255,0.05);}
+.book-spine:hover{transform:translateY(-32px) scale(1.03);filter:brightness(1.1);box-shadow:inset -4px 0 8px rgba(0,0,0,0.4),inset 2px 0 4px rgba(255,255,255,0.08),0 20px 40px rgba(0,0,0,0.5);}
+.book-spine:hover .spine-tooltip{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto;}
+.spine-top{position:absolute;top:0;left:0;right:0;height:6px;background:rgba(255,255,255,0.1);border-radius:2px 3px 0 0;}
+.spine-groove{position:absolute;inset:0;border-right:3px solid rgba(0,0,0,0.4);border-left:2px solid rgba(255,255,255,0.07);border-radius:2px 3px 0 0;}
+.spine-text{writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);font-family:'Oswald',sans-serif;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.8);padding:0.8rem 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:180px;user-select:none;position:relative;z-index:1;}
+.spine-tooltip{position:absolute;bottom:calc(100% + 24px);left:50%;transform:translateX(-50%) translateY(10px);background:rgba(12,15,8,0.98);border:1px solid rgba(201,168,76,0.45);padding:1.1rem 1.3rem;width:230px;opacity:0;transition:opacity 0.22s ease,transform 0.22s ease;pointer-events:none;z-index:200;text-align:left;box-shadow:0 12px 40px rgba(0,0,0,0.6);}
+.spine-tooltip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:8px solid transparent;border-top-color:rgba(201,168,76,0.45);}
+.tooltip-genre{font-family:'Oswald',sans-serif;font-size:0.55rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:0.45rem;}
+.tooltip-title{font-family:'Playfair Display',serif;font-size:0.98rem;font-weight:700;color:var(--cream);line-height:1.35;margin-bottom:0.5rem;}
+.tooltip-desc{font-size:0.78rem;color:#a09570;line-height:1.55;}
+.more-spines{display:flex;align-items:flex-end;padding-bottom:0.5rem;padding-left:1.5rem;flex-shrink:0;}
+.more-count{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;color:rgba(201,168,76,0.3);line-height:1;}
+.more-lbl{font-family:'Oswald',sans-serif;font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);margin-top:0.3rem;}
+
+/* ABOUT */
+#about{background:var(--ink);display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;}
+.about-facts{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2.5rem;}
+.fact-card{border:1px solid rgba(201,168,76,0.2);padding:1.4rem;background:rgba(61,74,46,0.15);transition:all 0.3s;}
+.fact-card:hover{border-color:var(--gold);background:rgba(61,74,46,0.3);}
+.fact-num{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--gold);line-height:1;}
+.fact-label{font-family:'Oswald',sans-serif;font-size:0.63rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--khaki);margin-top:0.3rem;}
+.about-quote{font-family:'Playfair Display',serif;font-size:1.35rem;font-style:italic;color:var(--gold-light);line-height:1.6;border-left:3px solid var(--gold);padding-left:1.8rem;margin:2.5rem 0;}
+.timeline-item{display:flex;gap:1.5rem;padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.1);}
+.timeline-year{font-family:'Oswald',sans-serif;font-size:0.82rem;color:var(--gold);min-width:52px;padding-top:2px;}
+.timeline-desc{font-size:0.95rem;color:#c0b79a;line-height:1.6;}
+
+/* EXPERTISE */
+#expertise{background:var(--ink);}
+.expertise-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:3rem;}
+.exp-card{padding:2.5rem 2rem;border:1px solid rgba(201,168,76,0.1);background:rgba(61,74,46,0.08);transition:all 0.3s;}
+.exp-card:hover{background:rgba(61,74,46,0.2);border-color:rgba(201,168,76,0.35);}
+.exp-icon{font-size:2rem;margin-bottom:1.2rem;}
+.exp-title{font-family:'Oswald',sans-serif;font-size:0.95rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem;}
+.exp-desc{font-size:0.93rem;color:#a09570;line-height:1.7;}
+
+/* CONTACT */
+#contact{background:linear-gradient(135deg,var(--olive-dark),var(--ink));text-align:center;position:relative;overflow:hidden;}
+#contact::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 100%,rgba(201,168,76,0.06),transparent 70%);pointer-events:none;}
+.contact-headline{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,3.5rem);font-weight:900;color:var(--cream);margin-bottom:1rem;position:relative;z-index:2;}
+.contact-sub{font-size:1.12rem;color:#a09570;max-width:600px;margin:0 auto 2.5rem;position:relative;z-index:2;}
+.contact-ways{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem;position:relative;z-index:2;}
+.contact-way{background:rgba(61,74,46,0.25);border:1px solid rgba(201,168,76,0.2);padding:1.2rem 2rem;text-align:center;min-width:140px;}
+.contact-way-icon{font-size:1.5rem;margin-bottom:0.5rem;}
+.contact-way-label{font-family:'Oswald',sans-serif;font-size:0.63rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:0.2rem;}
+.contact-way-val{font-size:0.88rem;color:var(--khaki);}
+.final-cta{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,2vw,1.85rem);font-style:italic;color:var(--gold);position:relative;z-index:2;margin-bottom:1.5rem;line-height:1.5;}
+.contact-email{font-family:'Oswald',sans-serif;font-size:1rem;letter-spacing:0.1em;color:var(--gold-light);text-decoration:none;position:relative;z-index:2;display:inline-block;margin-bottom:2.5rem;}
+footer{background:var(--ink);border-top:1px solid rgba(201,168,76,0.15);padding:2.5rem 8rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.footer-brand{font-family:'Oswald',sans-serif;font-size:0.73rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);}
+.footer-links{display:flex;gap:1.5rem;}
+.footer-links a{font-family:'Oswald',sans-serif;font-size:0.63rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--ash);text-decoration:none;transition:color 0.3s;}
+.footer-links a:hover{color:var(--gold);}
+.footer-copy{font-size:0.8rem;color:var(--ash);}
+
+/* ANIMATIONS - visible by default, enhanced by JS */
+.fade-in,.fade-in-left,.fade-in-right{opacity:1;}
+.js-ready .fade-in{opacity:0;transform:translateY(28px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.js-ready .fade-in.visible{opacity:1;transform:none;}
+.js-ready .fade-in-left{opacity:0;transform:translateX(-30px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.js-ready .fade-in-left.visible{opacity:1;transform:none;}
+.js-ready .fade-in-right{opacity:0;transform:translateX(30px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.js-ready .fade-in-right.visible{opacity:1;transform:none;}
+.delay-1{transition-delay:0.1s;}.delay-2{transition-delay:0.2s;}.delay-3{transition-delay:0.3s;}.delay-4{transition-delay:0.4s;}
+
+@media(max-width:900px){
+  nav{padding:0 2rem;} .nav-links{display:none;} .hamburger{display:flex;}
+  #hero{flex-direction:column;} .hero-left{padding:8rem 2rem 3rem;} .hero-right{width:100%;height:60vw;}
+  .trust-bar{padding:0.8rem 2rem;} section{padding:5rem 2rem;}
+  #about{grid-template-columns:1fr;gap:3rem;} .mh-inner{grid-template-columns:1fr;gap:3rem;}
+  .expertise-grid{grid-template-columns:1fr 1fr;} .yt-grid{grid-template-columns:1fr 1fr;}
+  footer{padding:2rem;flex-direction:column;text-align:center;}
+  .book-spine{height:165px;min-width:36px;}
+}
+@media(max-width:600px){
+  .expertise-grid,.yt-grid{grid-template-columns:1fr;}
+  .hero-stats{flex-wrap:wrap;gap:1.5rem;} .about-facts{grid-template-columns:1fr 1fr;}
+  .book-spine{height:140px;min-width:30px;}
+}
+.nav-mobile{display:none;position:fixed;inset:0;background:rgba(26,26,22,0.97);z-index:99;flex-direction:column;align-items:center;justify-content:center;gap:2rem;}
+.nav-mobile.open{display:flex;}
+.nav-mobile a{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--cream);text-decoration:none;transition:color 0.3s;}
+.nav-mobile a:hover{color:var(--gold);}
+.nav-close{position:absolute;top:1.5rem;right:2rem;font-size:2rem;color:var(--gold);cursor:pointer;background:none;border:none;}
+</style>
+</head>
+<body>
+<canvas id="radar-canvas"></canvas>
+<nav>
+  <div class="nav-brand">Col. Ajay K Raina, SM (Retd)</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li><li><a href="#military-history">Intel</a></li>
+    <li><a href="#youtube">Videos</a></li><li><a href="#books">Books</a></li>
+    <li><a href="#expertise">Expertise</a></li><li><a href="#contact">Connect</a></li>
+  </ul>
+  <div class="nav-social">
+    <a href="https://x.com/ajaykraina" target="_blank"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    <a href="https://www.youtube.com/@TRINETRAA-t3y" target="_blank"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+  </div>
+  <div class="hamburger" onclick="openMenu()"><span></span><span></span><span></span></div>
+</nav>
+<div class="nav-mobile" id="mobileMenu">
+  <button class="nav-close" onclick="closeMenu()">✕</button>
+  <a href="#about" onclick="closeMenu()">About</a><a href="#military-history" onclick="closeMenu()">Intel</a>
+  <a href="#youtube" onclick="closeMenu()">Videos</a><a href="#books" onclick="closeMenu()">Books</a>
+  <a href="#expertise" onclick="closeMenu()">Expertise</a><a href="#contact" onclick="closeMenu()">Connect</a>
+</div>
+
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-left">
+    <div class="hero-tag">Indian Army · Commissioned 1990</div>
+    <h1 class="hero-name">Colonel<br>Ajay K <span>Raina</span></h1>
+    <p class="hero-sub">SM (Retd) · Author · Military Historian · Speaker</p>
+    <div class="hero-div"></div>
+    <p class="hero-intro">From leading troops in the <strong>valleys of Kashmir</strong> to authoring <strong>30 books</strong> that document India's military glory — a soldier, scholar and storyteller who never apologises for loving <strong>Bharat</strong>.</p>
+    <div class="hero-cta">
+      <a href="#books" class="btn btn-primary">Browse My Books</a>
+      <a href="#contact" class="btn btn-outline">Invite for Speaking</a>
+      <a href="https://www.youtube.com/@TRINETRAA-t3y" target="_blank" class="btn btn-outline">Watch on YouTube</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-num" data-target="30">30</div><div class="stat-label">Books Authored</div></div>
+      <div><div class="stat-num" data-target="27">27</div><div class="stat-label">Years in Army</div></div>
+      <div><div class="stat-num" data-target="5">5</div><div class="stat-label">Wars Documented</div></div>
+    </div>
+  </div>
+  <div class="trust-bar">
+    <div class="trust-item">Sena Medal for Gallantry</div>
+    <div class="trust-item">Military History Research Foundation</div>
+    <div class="trust-item">Sabre & Quill Publishers</div>
+    <div class="trust-item">Limca Book of Records</div>
+    <div class="trust-item">93 Field Regiment · Rashtriya Rifles</div>
+  </div>
+</section>
+
+<!-- MILITARY HISTORY -->
+<section id="military-history">
+  <div class="mh-inner">
+    <div class="fade-in-left">
+      <div class="section-label">Defence Intelligence</div>
+      <h2>Today in<br><em>Military History</em></h2>
+      <div style="margin-bottom:2rem">
+        <div class="mh-day" id="mh-day">--</div>
+        <div class="mh-month-year" id="mh-my">Loading...</div>
+      </div>
+      <p class="mh-tagline">Every date carries echoes of sacrifice, strategy, and sovereignty — drawn from India's military heritage.</p>
+    </div>
+    <div class="fade-in-right">
+      <div class="mh-card">
+        <div class="mh-loading" id="mh-loading"><div class="mh-spinner"></div><div class="mh-spinner-text">Retrieving historical intelligence...</div></div>
+        <div id="mh-content" style="display:none">
+          <span class="mh-event-year" id="mh-year"></span>
+          <div class="mh-event-title" id="mh-title"></div>
+          <div class="mh-event-body" id="mh-body"></div>
+          <div class="mh-significance"><div class="mh-sig-label">Strategic Significance</div><div class="mh-sig-text" id="mh-sig"></div></div>
+        </div>
+        <button class="mh-refresh" id="mh-btn" onclick="loadMH(true)" style="display:none">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Load Another Event
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- YOUTUBE -->
+<section id="youtube">
+  <div class="yt-header fade-in">
+    <div>
+      <div class="section-label">Trinetra Channel</div>
+      <h2>Watch on <em>YouTube</em></h2>
+      <div class="yt-channel-info">
+        <div class="yt-channel-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
+        <div>
+          <div class="yt-channel-name">Trinetra</div>
+          <div class="yt-channel-handle">@TRINETRAA-t3y · Military History & Defence</div>
+          <div class="yt-sub-badge">Subscribe on YouTube</div>
+        </div>
+      </div>
+    </div>
+    <a href="https://www.youtube.com/@TRINETRAA-t3y" target="_blank" class="btn btn-outline">View All Videos →</a>
+  </div>
+  <div class="yt-grid">
+    <a class="yt-thumb-card" href="https://youtu.be/iYuhLx2VUEc" target="_blank">
+      <div class="yt-thumb-img-wrap">
+        <img src="https://img.youtube.com/vi/iYuhLx2VUEc/maxresdefault.jpg" onerror="this.src='https://img.youtube.com/vi/iYuhLx2VUEc/hqdefault.jpg'" alt="Trinetra video">
+        <div class="yt-thumb-overlay">
+          <div class="yt-play-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="#1a1a16"><polygon points="5,3 19,12 5,21"/></svg></div>
+        </div>
+      </div>
+      <div class="yt-thumb-footer">
+        <div class="yt-thumb-channel"><svg width="13" height="13" viewBox="0 0 24 24" fill="#ff4444"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> Trinetra</div>
+        <div class="yt-thumb-cta">Watch on YouTube ↗</div>
+      </div>
+    </a>
+    <a class="yt-thumb-card" href="https://youtu.be/W9XJ9LVBsvk" target="_blank">
+      <div class="yt-thumb-img-wrap">
+        <img src="https://img.youtube.com/vi/W9XJ9LVBsvk/maxresdefault.jpg" onerror="this.src='https://img.youtube.com/vi/W9XJ9LVBsvk/hqdefault.jpg'" alt="Trinetra video">
+        <div class="yt-thumb-overlay">
+          <div class="yt-play-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="#1a1a16"><polygon points="5,3 19,12 5,21"/></svg></div>
+        </div>
+      </div>
+      <div class="yt-thumb-footer">
+        <div class="yt-thumb-channel"><svg width="13" height="13" viewBox="0 0 24 24" fill="#ff4444"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> Trinetra</div>
+        <div class="yt-thumb-cta">Watch on YouTube ↗</div>
+      </div>
+    </a>
+    <a class="yt-thumb-card" href="https://youtu.be/Z5VYNG_s6aw" target="_blank">
+      <div class="yt-thumb-img-wrap">
+        <img src="https://img.youtube.com/vi/Z5VYNG_s6aw/maxresdefault.jpg" onerror="this.src='https://img.youtube.com/vi/Z5VYNG_s6aw/hqdefault.jpg'" alt="Trinetra video">
+        <div class="yt-thumb-overlay">
+          <div class="yt-play-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="#1a1a16"><polygon points="5,3 19,12 5,21"/></svg></div>
+        </div>
+      </div>
+      <div class="yt-thumb-footer">
+        <div class="yt-thumb-channel"><svg width="13" height="13" viewBox="0 0 24 24" fill="#ff4444"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> Trinetra</div>
+        <div class="yt-thumb-cta">Watch on YouTube ↗</div>
+      </div>
+    </a>
+  </div>
+  <div class="yt-cta-row fade-in">
+    <a href="https://www.youtube.com/@TRINETRAA-t3y" target="_blank" class="btn btn-primary">Subscribe to Trinetra</a>
+    <a href="https://x.com/ajaykraina" target="_blank" class="btn btn-outline">Follow on X @ajaykraina</a>
+  </div>
+</section>
+
+<!-- BOOKS / BOOKSHELF -->
+<section id="books">
+  <div class="fade-in" style="max-width:680px">
+    <div class="section-label">Literary Works</div>
+    <h2>The <em>Bookshelf</em></h2>
+    <p class="body-text">Thirty volumes of military history, Kashmir narratives, and national security — each spine a battle fought with ink. <em style="color:var(--khaki)">Hover over a book to explore.</em></p>
+  </div>
+  <div class="bookshelf-wrap fade-in">
+    <div class="shelf" id="shelf">
+
+      <a class="book-spine" href="https://www.amazon.in/Battle-Kashmir-Col-Ajay-Raina/dp/B0C6TZ2144" target="_blank" style="background:linear-gradient(175deg,#5c3a0a,#3a2206);width:52px;text-decoration:none;">
+        <div class="spine-top"></div><div class="spine-groove"></div>
+        <div class="spine-text">Battle for Kashmir</div>
+        <div class="spine-tooltip">
+          <div class="tooltip-genre">Kashmir · 1947 War</div>
+          <div class="tooltip-title">Battle for Kashmir</div>
+          <div class="tooltip-desc">6,000 Kabaili raiders, the race to Srinagar, and the soldiers who held the line. The definitive account of India's first war. 4.7★ · 24 reviews</div>
+          <div style="margin-top:0.6rem;font-family:'Oswald',sans-serif;font-size:0.6rem;letter-spacing:0.15em;color:var(--gold);">₹699 · Buy on Amazon ↗</div>
+        </div>
+      </a>
+
+      <a class="book-spine" href="https://www.amazon.in/Gunmen-SM-Colonel-Ajay-Raina/dp/B0DGXQWMX6" target="_blank" style="background:linear-gradient(175deg,#3e0a0a,#260606);width:44px;text-decoration:none;">
+        <div class="spine-top"></div><div class="spine-groove"></div>
+        <div class="spine-text">Unknown Gunmen</div>
+        <div class="spine-tooltip">
+          <div class="tooltip-genre">Covert Ops · 2024</div>
+          <div class="tooltip-title">Unknown Gunmen</div>
+          <div class="tooltip-desc">India's covert response doctrine post-Uri and Pulwama — surgical strikes, shadow wars, and what happens beyond the cameras.</div>
+          <div style="margin-top:0.6rem;font-family:'Oswald',sans-serif;font-size:0.6rem;letter-spacing:0.15em;color:var(--gold);">₹699 · Buy on Amazon ↗</div>
+        </div>
+      </a>
+
+      <a class="book-spine" href="https://www.amazon.in/UNHOLY-JIHAD-True-Story-Kashmir/dp/B09RM5KNZQ" target="_blank" style="background:linear-gradient(175deg,#620e08,#3e0804);width:46px;text-decoration:none;">
+        <div class="spine-top"></div><div class="spine-groove"></div>
+        <div class="spine-text">Unholy Jihad</div>
+        <div class="spine-tooltip">
+          <div class="tooltip-genre">National Security</div>
+          <div class="tooltip-title">Unholy Jihad</div>
+          <div class="tooltip-desc">How Pakistan ignited Kashmir's jihad — and how the fire scorched Kashmir itself. The true story, unflinchingly told. 4.6★ · 34 reviews</div>
+          <div style="margin-top:0.6rem;font-family:'Oswald',sans-serif;font-size:0.6rem;letter-spacing:0.15em;color:var(--gold);">₹699 · Buy on Amazon ↗</div>
+        </div>
+      </a>
+
+      <a class="book-spine" href="https://www.amazon.in/Kargil-99-Accounts-Diverse-Kinds-ebook/dp/B0DH38WLC1" target="_blank" style="background:linear-gradient(175deg,#3e2e08,#261c05);width:50px;height:228px;text-decoration:none;">
+        <div class="spine-top"></div><div class="spine-groove"></div>
+        <div class="spine-text">Kargil '99</div>
+        <div class="spine-tooltip">
+          <div class="tooltip-genre">Kargil War · 1999</div>
+          <div class="tooltip-title">Kargil '99</div>
+          <div class="tooltip-desc">Accounts of diverse kinds from Operation Vijay — the cold, the courage, and the command decisions that retook India's highest peaks.</div>
+          <div style="margin-top:0.6rem;font-family:'Oswald',sans-serif;font-size:0.6rem;letter-spacing:0.15em;color:var(--gold);">Buy on Amazon ↗</div>
+        </div>
+      </a>
+
+      <a class="book-spine" href="https://www.amazon.in/s?me=AYF7V89O4" target="_blank" style="background:linear-gradient(175deg,#2e420a,#1c2808);width:58px;height:232px;text-decoration:none;">
+        <div class="spine-top"></div><div class="spine-groove"></div>
+        <div class="spine-text">1947–48 Kashmir War Vol. I</div>
+        <div class="spine-tooltip">
+          <div class="tooltip-genre">Historical Series</div>
+          <div class="tooltip-title">The 1947–48 Kashmir War — Volume I</div>
+          <div class="tooltip-desc">A multi-volume reconstruction of the first Kashmir War — the battles, the betrayals, and the bravery that shaped modern India.</div>
+          <div style="margin-top:0.6rem;font-family:'Oswald',sans-serif;font-size:0.6rem;letter-spacing:0.15em;color:var(--gold);">View on Amazon ↗</div>
+        </div>
+      </a>
+
+      <a class="book-spine" href="https://www.amazon.in/s?me=AYF7V89O4" target="_blank" style="background:linear-gradient(175deg,#2e420a,#1e2c08);width:52px;height:222px;text-decoration:none;">
+        <div class="spine-top"></div><div class="spine-groove"></div>
+        <div class="spine-text">1947–48 Kashmir War Vol. II</div>
+        <div class="spine-tooltip">
+          <div class="tooltip-genre">Historical Series</div>
+          <div class="tooltip-title">The 1947–48 Kashmir War — Volume II</div>
+          <div class="tooltip-desc">Continuing the definitive chronicle of India's first military campaign — siege, sacrifice, and the soldiers who prevailed.</div>
+          <div style="margin-top:0.6rem;font-family:'Oswald',sans-serif;font-size:0.6rem;letter-spacing:0.15em;color:var(--gold);">View on Amazon ↗</div>
+        </div>
+      </a>
+
+      <a class="book-spine" href="https://www.amazon.in/s?me=AYF7V89O4" target="_blank" style="background:linear-gradient(175deg,#0a2e42,#071c28);width:44px;text-decoration:none;">
+        <div class="spine-top"></div><div class="spine-groove"></div>
+        <div class="spine-text">Soldiering With Passion</div>
+        <div class="spine-tooltip">
+          <div class="tooltip-genre">Biography</div>
+          <div class="tooltip-title">Soldiering With Passion</div>
+          <div class="tooltip-desc">The authoritative biography of Lt Gen DP Pandey — a leader's journey through India's most demanding theatres of war.</div>
+          <div style="margin-top:0.6rem;font-family:'Oswald',sans-serif;font-size:0.6rem;letter-spacing:0.15em;color:var(--gold);">View on Amazon ↗</div>
+        </div>
+      </a>
+
+      <a class="book-spine" href="https://www.amazon.in/s?me=AYF7V89O4" target="_blank" style="background:linear-gradient(175deg,#1c0a36,#110620);width:48px;height:195px;text-decoration:none;">
+        <div class="spine-top"></div><div class="spine-groove"></div>
+        <div class="spine-text">Partition & the Sword</div>
+        <div class="spine-tooltip">
+          <div class="tooltip-genre">Partition History</div>
+          <div class="tooltip-title">Partition & the Sword</div>
+          <div class="tooltip-desc">How the 1947 partition of British India set the stage for seven decades of conflict — and what it means for India's security today.</div>
+          <div style="margin-top:0.6rem;font-family:'Oswald',sans-serif;font-size:0.6rem;letter-spacing:0.15em;color:var(--gold);">View on Amazon ↗</div>
+        </div>
+      </a>
+
+      <a class="book-spine" href="https://www.amazon.in/s?me=AYF7V89O4" target="_blank" style="background:linear-gradient(175deg,#2e1e08,#1c1206);width:42px;height:218px;text-decoration:none;">
+        <div class="spine-top"></div><div class="spine-groove"></div>
+        <div class="spine-text">The Rashtriya Rifles Chronicles</div>
+        <div class="spine-tooltip">
+          <div class="tooltip-genre">Counter-Insurgency</div>
+          <div class="tooltip-title">The Rashtriya Rifles Chronicles</div>
+          <div class="tooltip-desc">First-hand accounts from frontline counter-insurgency operations in J&K — the soldiers who held the valley for decades.</div>
+          <div style="margin-top:0.6rem;font-family:'Oswald',sans-serif;font-size:0.6rem;letter-spacing:0.15em;color:var(--gold);">View on Amazon ↗</div>
+        </div>
+      </a>
+
+      <a class="book-spine" href="https://www.amazon.in/s?me=AYF7V89O4" target="_blank" style="background:linear-gradient(175deg,#3e1e08,#261208);width:50px;height:226px;text-decoration:none;">
+        <div class="spine-top"></div><div class="spine-groove"></div>
+        <div class="spine-text">India's Northern Shield</div>
+        <div class="spine-tooltip">
+          <div class="tooltip-genre">Geopolitics · Strategy</div>
+          <div class="tooltip-title">India's Northern Shield</div>
+          <div class="tooltip-desc">A strategic analysis of India's mountain warfare doctrine and the defence of the Himalayan frontier against multiple adversaries.</div>
+          <div style="margin-top:0.6rem;font-family:'Oswald',sans-serif;font-size:0.6rem;letter-spacing:0.15em;color:var(--gold);">View on Amazon ↗</div>
+        </div>
+      </a>
+
+      <a class="book-spine" href="https://www.amazon.in/s?me=AYF7V89O4" target="_blank" style="background:linear-gradient(175deg,#1e2e1e,#121e12);width:40px;text-decoration:none;">
+        <div class="spine-top"></div><div class="spine-groove"></div>
+        <div class="spine-text">Field of Honour</div>
+        <div class="spine-tooltip">
+          <div class="tooltip-genre">Military Memoir</div>
+          <div class="tooltip-title">Field of Honour</div>
+          <div class="tooltip-desc">A memoir of command — the weight of leadership, bonds of brotherhood, and the unyielding duty of a soldier to his nation.</div>
+          <div style="margin-top:0.6rem;font-family:'Oswald',sans-serif;font-size:0.6rem;letter-spacing:0.15em;color:var(--gold);">View on Amazon ↗</div>
+        </div>
+      </a>
+
+      <div class="more-spines">
+        <div style="text-align:center;padding-bottom:1rem">
+          <div class="more-count">+19</div>
+          <div class="more-lbl">More Titles</div>
+        </div>
+      </div>
+    </div>
+    <div class="shelf-ledge"></div>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:center;gap:2rem;margin-top:2.5rem;flex-wrap:wrap" class="fade-in">
+    <a href="/cdn-cgi/l/email-protection#aacbc0cbd3c1d8d8cbc3c4cbeacdc7cbc3c684c9c5c7" class="btn btn-primary">Request Full Book List</a>
+    <span style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--ash);font-size:1rem;">Available in English & regional Indian languages</span>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="fade-in-left">
+    <div class="section-label">The Man Behind the Mission</div>
+    <h2>Soldier. Scholar.<br><em>Storyteller.</em></h2>
+    <p class="body-text">Born in 1969 in Jammu to a family that migrated from Pakistan-Occupied J&K during the 1947 partition, Colonel Ajay K Raina was commissioned into the Indian Army in 1990. He proudly commanded <strong style="color:var(--gold-light)">93 Field Regiment</strong> and served with Rashtriya Rifles in North Kashmir — earning the <strong style="color:var(--gold-light)">Sena Medal for Gallantry</strong>.</p>
+    <p class="body-text" style="margin-top:1rem">After 27 years of distinguished service, he took premature retirement in 2017 to pursue military history, nation-building, and truth-telling through writing and speaking.</p>
+    <div class="about-quote">"History doesn't remember the comfortable. It remembers those who stood their ground."</div>
+    <div class="about-facts">
+      <div class="fact-card fade-in delay-1"><div class="fact-num">30</div><div class="fact-label">Books Authored</div></div>
+      <div class="fact-card fade-in delay-2"><div class="fact-num">27</div><div class="fact-label">Years in Army</div></div>
+      <div class="fact-card fade-in delay-3"><div class="fact-num">2017</div><div class="fact-label">Year Retired</div></div>
+      <div class="fact-card fade-in delay-4"><div class="fact-num">∞</div><div class="fact-label">Love for Bharat</div></div>
+    </div>
+  </div>
+  <div class="fade-in-right">
+    <div class="section-label">Journey</div>
+    <h2><em>Timeline</em></h2>
+    <div>
+      <div class="timeline-item"><div class="timeline-year">1969</div><div class="timeline-desc">Born in Jammu; family roots in partition-era J&K migration</div></div>
+      <div class="timeline-item"><div class="timeline-year">1990</div><div class="timeline-desc">Commissioned into the Indian Army</div></div>
+      <div class="timeline-item"><div class="timeline-year">Service</div><div class="timeline-desc">Commanded 93 Field Regiment; served Rashtriya Rifles in North Kashmir</div></div>
+      <div class="timeline-item"><div class="timeline-year">Award</div><div class="timeline-desc">Awarded the <strong style="color:var(--gold)">Sena Medal for Gallantry</strong></div></div>
+      <div class="timeline-item"><div class="timeline-year">2017</div><div class="timeline-desc">Premature retirement to pursue writing, research & nation-building</div></div>
+      <div class="timeline-item"><div class="timeline-year">Today</div><div class="timeline-desc">30 books, Founder MHRF, Co-founder Sabre & Quill, speaker & film consultant</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERTISE -->
+<section id="expertise">
+  <div class="fade-in" style="max-width:680px"><div class="section-label">Areas of Excellence</div><h2>Where <em>Experience</em> Meets Authority</h2></div>
+  <div class="expertise-grid">
+    <div class="exp-card fade-in delay-1"><div class="exp-icon">⚔️</div><div class="exp-title">Military History & Leadership</div><div class="exp-desc">First-hand knowledge translated into landmark books and lectures on India's defence history and battlefield leadership.</div></div>
+    <div class="exp-card fade-in delay-2"><div class="exp-icon">🗺️</div><div class="exp-title">Kashmir & J&K Narratives</div><div class="exp-desc">India's foremost voice in busting fake narratives around J&K — backed by lived service and fearless writing.</div></div>
+    <div class="exp-card fade-in delay-3"><div class="exp-icon">🛡️</div><div class="exp-title">National Security & Geopolitics</div><div class="exp-desc">Regular panelist and defence analyst on national television on cross-border terrorism and India's security posture.</div></div>
+    <div class="exp-card fade-in delay-1"><div class="exp-icon">🎤</div><div class="exp-title">Motivational & Leadership Talks</div><div class="exp-desc">Inspiring youth, corporates, and defence aspirants with stories of grit and purpose from India's front lines.</div></div>
+    <div class="exp-card fade-in delay-2"><div class="exp-icon">🎬</div><div class="exp-title">Film & Media Consulting</div><div class="exp-desc">Bringing authenticity and historical accuracy to Indian cinema and media on military themes.</div></div>
+    <div class="exp-card fade-in delay-3"><div class="exp-icon">🏔️</div><div class="exp-title">Heritage & Adventure Tourism</div><div class="exp-desc">Owner of Colonel's Barot Highland Retreat in Himachal Pradesh — where nature, history, and hospitality converge.</div></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label fade-in" style="justify-content:center">Collaborate</div>
+  <div class="contact-headline fade-in">Ready to Work Together?</div>
+  <p class="contact-sub fade-in">Whether you need a keynote, defence analyst, book launch guest, film consultant, or the Barot Highland experience — reach out.</p>
+  <div class="contact-ways fade-in">
+    <div class="contact-way"><div class="contact-way-icon">🎤</div><div class="contact-way-label">Speaking</div><div class="contact-way-val">Keynotes & Panels</div></div>
+    <div class="contact-way"><div class="contact-way-icon">📚</div><div class="contact-way-label">Books</div><div class="contact-way-val">Launches & Signings</div></div>
+    <div class="contact-way"><div class="contact-way-icon">🎬</div><div class="contact-way-label">Film</div><div class="contact-way-val">Consulting</div></div>
+    <div class="contact-way"><div class="contact-way-icon">🏔️</div><div class="contact-way-label">Retreat</div><div class="contact-way-val">Barot Highland</div></div>
+    <div class="contact-way"><div class="contact-way-icon">📺</div><div class="contact-way-label">Media</div><div class="contact-way-val">TV & Podcasts</div></div>
+  </div>
+  <div class="final-cta fade-in">"Preserving History. Inspiring Leadership. Shaping Narratives."</div>
+  <p class="fade-in" style="color:var(--ash);font-size:0.9rem;margin-bottom:1.5rem;position:relative;z-index:2;">The nation needs voices that speak truth without fear.</p>
+  <a href="/cdn-cgi/l/email-protection#20414a41594b525241494e4160474d41494c0e434f4d" class="contact-email fade-in"><span class="__cf_email__" data-cfemail="7b1a111a021009091a12151a3b1c161a121755181416">[email&#160;protected]</span></a><br><br>
+  <div class="fade-in" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative;z-index:2;margin-bottom:1rem">
+    <a href="/cdn-cgi/l/email-protection#3e5f545f47554c4c5f57505f7e59535f5752105d5153" class="btn btn-primary">Get In Touch Now</a>
+    <a href="https://www.youtube.com/@TRINETRAA-t3y" target="_blank" class="btn btn-outline">Watch on YouTube</a>
+    <a href="https://x.com/ajaykraina" target="_blank" class="btn btn-outline">Follow on X</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">Colonel Ajay K Raina, SM (Retd)</div>
+  <div class="footer-links">
+    <a href="#about">About</a><a href="#military-history">Intel</a><a href="#youtube">Videos</a>
+    <a href="#books">Books</a><a href="#expertise">Expertise</a><a href="#contact">Contact</a>
+  </div>
+  <div class="footer-copy">© 2025 Colonel Ajay K Raina. All rights reserved.</div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// Mark body as JS-ready so fade-in classes activate
+document.body.classList.add('js-ready');
+
+// Scroll observer
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in,.fade-in-left,.fade-in-right').forEach(el => obs.observe(el));
+
+// Date display
+const now = new Date();
+document.getElementById('mh-day').textContent = now.getDate();
+document.getElementById('mh-my').textContent = now.toLocaleDateString('en-IN',{month:'long',year:'numeric'}).toUpperCase();
+
+// Military History
+let mhDone = false;
+async function loadMH(again) {
+  const d = new Date();
+  const ds = d.toLocaleDateString('en-IN',{day:'numeric',month:'long'});
+  document.getElementById('mh-loading').style.display='flex';
+  document.getElementById('mh-content').style.display='none';
+  document.getElementById('mh-btn').style.display='none';
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514', max_tokens:800,
+        messages:[{role:'user',content:`You are a military history expert. Today is ${ds}. ${again?'Give a DIFFERENT event than before.':''}
+Find a notable military event on ${ds} related to Indian Armed Forces, Kashmir, India-Pakistan wars, or significant global military history.
+Respond ONLY with valid JSON (no markdown):
+{"year":"1971","title":"Short title max 10 words","body":"2-3 sentences describing the event vividly.","significance":"1 sentence on why this matters to India."}`}]
+      })
+    });
+    const data = await r.json();
+    const text = data.content.map(i=>i.text||'').join('').replace(/```json|```/g,'').trim();
+    const p = JSON.parse(text);
+    document.getElementById('mh-year').textContent = p.year;
+    document.getElementById('mh-title').textContent = p.title;
+    document.getElementById('mh-body').textContent = p.body;
+    document.getElementById('mh-sig').textContent = p.significance;
+    document.getElementById('mh-loading').style.display='none';
+    document.getElementById('mh-content').style.display='block';
+    document.getElementById('mh-btn').style.display='inline-flex';
+    mhDone = true;
+  } catch(e) {
+    document.getElementById('mh-loading').innerHTML='<div style="color:var(--ash);text-align:center;font-size:0.9rem">Follow Colonel Raina on <a href="https://x.com/ajaykraina" style="color:var(--gold)">X @ajaykraina</a> for daily military history insights.</div>';
+  }
+}
+const mhObs = new IntersectionObserver(entries=>{
+  if(entries[0].isIntersecting && !mhDone){ loadMH(false); mhObs.disconnect(); }
+},{threshold:0.2});
+mhObs.observe(document.getElementById('military-history'));
+
+
+// Radar canvas
+const canvas = document.getElementById('radar-canvas');
+const ctx = canvas.getContext('2d');
+let angle = 0;
+function resize(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+function radar(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const cx=canvas.width*0.85, cy=canvas.height*0.15, r=180;
+  ctx.strokeStyle='rgba(201,168,76,0.5)'; ctx.lineWidth=0.7;
+  [1,0.66,0.33].forEach(f=>{ ctx.beginPath(); ctx.arc(cx,cy,r*f,0,Math.PI*2); ctx.stroke(); });
+  ctx.beginPath(); ctx.moveTo(cx-r,cy); ctx.lineTo(cx+r,cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx,cy-r); ctx.lineTo(cx,cy+r); ctx.stroke();
+  ctx.save(); ctx.translate(cx,cy); ctx.rotate(angle);
+  const sw=ctx.createLinearGradient(0,0,r,0);
+  sw.addColorStop(0,'rgba(201,168,76,0.35)'); sw.addColorStop(1,'rgba(201,168,76,0)');
+  ctx.beginPath(); ctx.moveTo(0,0); ctx.arc(0,0,r,-0.5,0);
+  ctx.fillStyle=sw; ctx.fill(); ctx.restore();
+  angle+=0.008; requestAnimationFrame(radar);
+}
+radar();
+
+function openMenu(){ document.getElementById('mobileMenu').classList.add('open'); }
+function closeMenu(){ document.getElementById('mobileMenu').classList.remove('open'); }
+</script>
+</body>
+</html>
